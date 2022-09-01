@@ -25,9 +25,6 @@ public class Resource {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "access_id")
-    private Long accessId;
-
     private String name;
 
     private String description;

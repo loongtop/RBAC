@@ -1,5 +1,6 @@
 package com.gkhy.rbac.entity;
 
+import com.gkhy.rbac.entity.base.DateModel;
 import com.gkhy.rbac.entity.permission.Privilege;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +26,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "name" }) })
-public final class Permission implements Serializable {
+public final class Permission extends DateModel {
 
     private static final long serialVersionUID = -4961118546104218207L;
 
@@ -58,8 +59,6 @@ public final class Permission implements Serializable {
 
     private Boolean enabled = Boolean.TRUE;
 
-    private String menu;
-
     private LocalDateTime expiryTime;
 
     @Transient
@@ -67,4 +66,10 @@ public final class Permission implements Serializable {
 
     @ManyToMany(mappedBy = "permissions")
     private Set<Role> roles = new HashSet<>();
+
+    @ManyToMany(targetEntity = Privilege.class, cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER)
+    @JoinTable(name = "permission_privilege",
+            joinColumns = {@JoinColumn(name = "permission_id"), },
+            inverseJoinColumns = {@JoinColumn(name = "privilege_id")})
+    private Set<Privilege> privileges = new HashSet<>();
 }
